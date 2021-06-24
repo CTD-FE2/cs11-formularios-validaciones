@@ -1,11 +1,11 @@
 window.onload = () => {
-    const form = document.querySelector("form");
+    const form = document.forms.inscripcion;
     const btnEnviar = document.querySelector("button");
-    const nombre = form.querySelector("#nombre");
-    const contrasenia = form.querySelector("#pass");
-    const telefono = form.querySelector("#tel");
-    const hobbies = form.hobbies;
-    const nacionalidades = form.nacionalidad;
+    const nombre = form.nombre;
+    const contrasenia = form.pass;
+    const telefono = form.tel;
+    const hobbies = Array.from(form.hobbies);
+    const nacionalidades = Array.from(form.nacionalidad);
     const datos = {
         nombreCompleto: null,
         contrasenia: null,
@@ -41,17 +41,8 @@ window.onload = () => {
     form.addEventListener("submit", event => {
         event.preventDefault();
 
-        hobbies.forEach(hobbie => {
-            if (hobbie.checked) {
-                datos.hobbies.push(hobbie.value);
-            }
-        });
-
-        nacionalidades.forEach(nacionalidad => {
-            if (nacionalidad.checked) {
-                datos.nacionalidad = nacionalidad.parentNode.innerText.trim();
-            }
-        });
+        datos.hobbies = hobbies.filter(hobbie => hobbie.checked).map(hobbie => hobbie.value);
+        datos.nacionalidad = nacionalidades.find(nacionalidad => nacionalidad.checked).value;
 
         console.log(datos);
     });
