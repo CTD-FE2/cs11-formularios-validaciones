@@ -6,20 +6,14 @@ window.onload = () => {
     const telefono = form.tel;
     const hobbies = Array.from(form.hobbies);
     const nacionalidades = Array.from(form.nacionalidad);
-    const datos = {
-        nombreCompleto: null,
-        contrasenia: null,
-        telefono: null,
-        hobbies: [],
-        nacionalidad: [],
-    }
+    const persona = new Persona();
     
     nombre.addEventListener("keyup", () => {
         if (nombre.value === "") {
             btnEnviar.disabled = true;
         } else {
             btnEnviar.disabled = false;
-            datos.nombreCompleto = nombre.value.trim().toLowerCase();
+            persona.nombreCompleto = nombre.value.trim().toLowerCase();
         }
     });
 
@@ -28,22 +22,56 @@ window.onload = () => {
             btnEnviar.disabled = true;
         } else {
             btnEnviar.disabled = false;
-            datos.contrasenia = contrasenia.value.toLowerCase();
+            persona.contrasenia = contrasenia.value.toLowerCase();
         }
     });
 
     telefono.addEventListener("keyup", () => {
         const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/i;
-        datos.telefono = telefono.value.trim();
+        persona.telefono = telefono.value.trim();
         btnEnviar.enabled = regex.test(telefono.value);
     });
 
     form.addEventListener("submit", event => {
         event.preventDefault();
-
-        datos.hobbies = hobbies.filter(hobbie => hobbie.checked).map(hobbie => hobbie.value);
-        datos.nacionalidad = nacionalidades.find(nacionalidad => nacionalidad.checked).value;
-
-        console.log(datos);
+        let sePudoAgregarHobbies = persona.agregarHobbies(hobbies);
+        if (!sePudoAgregarHobbies) {
+            alert("No puede seleccionar más de 4 hobbies");
+        } else {
+            persona.agregarNacionalidad(nacionalidades);
+            persona.mostrarDatos();
+        }
     });
 };
+
+class Persona {
+    constructor() {
+        this.nombreCompleto = null;
+        this.contrasenia = null;
+        this.telefono = null;
+        this.hobbies = [];
+        this.nacionalidad = null;
+    }
+
+    agregarHobbies(hobbies) {
+        let sePudoAgregarHobbies = true;
+        this.hobbies = hobbies.filter(hobbie => hobbie.checked).map(hobbie => hobbie.value);
+        if (this.hobbies.length > 4) {
+            sePudoAgregarHobbies = false;
+        }
+        return sePudoAgregarHobbies;
+    }
+
+    agregarNacionalidad(nacionalidades) {
+        this.nacionalidad = nacionalidades.find(nacionalidad => nacionalidad.checked).value;
+    }
+
+    mostrarDatos() {
+        console.log("Nombre:\t\t\t" + this.nombreCompleto);
+        console.log("Contraseña:\t\t" + this.contrasenia);
+        console.log("Teléfono:\t\t" + this.telefono);
+        console.log("Hobbies:\t\t");
+        this.hobbies.forEach(hobbie => console.log("\t- " + hobbie));
+        console.log("Nacionalidad:\t" + this.nacionalidad);
+    }
+}
