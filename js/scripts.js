@@ -13,7 +13,7 @@ window.onload = () => {
             btnEnviar.disabled = true;
         } else {
             btnEnviar.disabled = false;
-            persona.nombreCompleto = nombre.value.trim().toLowerCase();
+            persona.setNombreCompleto(nombre.value.trim().toLowerCase());
         }
     });
 
@@ -22,14 +22,18 @@ window.onload = () => {
             btnEnviar.disabled = true;
         } else {
             btnEnviar.disabled = false;
-            persona.contrasenia = contrasenia.value.toLowerCase();
+            persona.setContrasenia(contrasenia.value.toLowerCase());
         }
     });
 
     telefono.addEventListener("keyup", () => {
         const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/i;
-        persona.telefono = telefono.value.trim();
-        btnEnviar.enabled = regex.test(telefono.value);
+        if (regex.test(telefono.value)) {
+            persona.setTelefono(telefono.value.trim());
+            btnEnviar.enabled = true;
+        } else {
+            btnEnviar.enabled = false;
+        }
     });
 
     form.addEventListener("submit", event => {
@@ -45,12 +49,30 @@ window.onload = () => {
 };
 
 class Persona {
+    #nombreCompleto;
+    #contrasenia;
+    #telefono;
+    #hobbies;
+    #nacionalidad;
+
     constructor() {
         this.nombreCompleto = null;
         this.contrasenia = null;
         this.telefono = null;
         this.hobbies = [];
         this.nacionalidad = null;
+    }
+
+    setNombreCompleto(nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
+    }
+
+    setContrasenia(contrasenia) {
+        this.contrasenia = contrasenia;
+    }
+
+    setTelefono(telefono) {
+        this.telefono = telefono;
     }
 
     agregarHobbies(hobbies) {
