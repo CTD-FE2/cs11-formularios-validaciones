@@ -48,9 +48,10 @@ window.onload = () => {
         let sePudoAgregarHobbies = persona.agregarHobbies(hobbies);
         if (!sePudoAgregarHobbies) {
             alert("No puede seleccionar más de 4 hobbies");
-        } else {
-            persona.agregarNacionalidad(nacionalidades);
+        } else if (persona.agregarNacionalidad(nacionalidades)) {
             persona.mostrarDatos();
+        } else {
+            alert("Tiene que seleccionar una nacionalidad");
         }
     });
 };
@@ -84,15 +85,24 @@ class Persona {
 
     agregarHobbies(hobbies) {
         let sePudoAgregarHobbies = true;
-        this.hobbies = hobbies.filter(hobbie => hobbie.checked).map(hobbie => hobbie.value);
-        if (this.hobbies.length > 4) {
+        const valoresHobbies = hobbies.filter(hobbie => hobbie.checked).map(hobbie => hobbie.value);
+        if (valoresHobbies.length > 4) {
             sePudoAgregarHobbies = false;
+        } else {
+            this.hobbies = valoresHobbies;
         }
         return sePudoAgregarHobbies;
     }
 
     agregarNacionalidad(nacionalidades) {
-        this.nacionalidad = nacionalidades.find(nacionalidad => nacionalidad.checked).value;
+        let sePudoAgregarNacionalidad = true;
+        const nacionalidad = nacionalidades.find(nacionalidad => nacionalidad.checked);
+        if (nacionalidad !== undefined) {
+            this.nacionalidad = nacionalidad.value;
+        } else {
+            sePudoAgregarNacionalidad = false;
+        }
+        return sePudoAgregarNacionalidad;
     }
 
     mostrarDatos() {
