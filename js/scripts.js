@@ -9,20 +9,25 @@ window.onload = () => {
     const persona = new Persona();
     
     nombre.addEventListener("keyup", () => {
-        if (nombre.value === "") {
+        const partesNombre = nombre.value.trim().toLowerCase().split(" ");
+        if (partesNombre.length < 2) {
             btnEnviar.disabled = true;
+            nombre.classList.add("error");
         } else {
             btnEnviar.disabled = false;
-            persona.setNombreCompleto(nombre.value.trim().toLowerCase());
+            persona.setNombreCompleto(partesNombre.join(" "));
+            nombre.classList.remove("error");
         }
     });
 
     contrasenia.addEventListener("keyup", () => {
         if (contrasenia.value === "") {
             btnEnviar.disabled = true;
+            contrasenia.classList.add("error");
         } else {
             btnEnviar.disabled = false;
             persona.setContrasenia(contrasenia.value.toLowerCase());
+            contrasenia.classList.remove("error");
         }
     });
 
@@ -31,8 +36,10 @@ window.onload = () => {
         if (regex.test(telefono.value)) {
             persona.setTelefono(telefono.value.trim());
             btnEnviar.enabled = true;
+            telefono.classList.remove("error");
         } else {
             btnEnviar.enabled = false;
+            telefono.classList.add("error");
         }
     });
 
